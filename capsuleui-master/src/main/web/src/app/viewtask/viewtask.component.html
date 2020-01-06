@@ -1,0 +1,127 @@
+
+<div class="container"> 
+  <form>
+    <div class="row">      
+        <div class="col">
+          <label>Task:</label>
+          <input [(ngModel)]="taskDTO.taskname"  name="taskname" type="text" class="form-control"/>
+        </div>      
+        <div class="col">            
+            <label>Parent:</label>
+            <input type="text" [(ngModel)]="taskDTO.parentname"  name="parentname" class="form-control"/>
+          </div>
+      </div>
+
+      <div class="row">    
+       
+          <div class="col">
+              <label>Priority From:</label>
+              <input type="number" value="0"   [(ngModel)]="taskDTO.priorityFrom"  name="priorityFrom" class="form-control"/>
+          </div>
+          <div class="col">
+              <label>Priority To:</label>
+              <input type="number" class="form-control" [(ngModel)]="taskDTO.priorityTo"  name="priorityTo"/>
+          </div>
+        
+            <div class="col">
+                <label>Start Date:</label>
+                <input type="date" [(ngModel)]="taskDTO.startDate" name="startDate" class="form-control"/>
+            </div>
+            <div class="col">
+                <label>To Date:</label>
+                <input type="date" [(ngModel)]="taskDTO.toDate" name="toDate" class="form-control"/>
+            </div>
+         
+      </div>
+   
+  </form>
+</div>
+
+<div class="no-data text-center" *ngIf="taskList.length==0">
+  <h1> There is no Task added yet !!</h1>
+</div>
+
+<div *ngIf="taskList.length!==0">
+  <h3 class="mb-3 text-center">Task List</h3>
+  <div class="col-md-12">
+    <table class="table table-striped">
+    <thead>
+      <th scope="col">Task name</th>
+      <th scope="col">Parent name</th>
+      <th scope="col">Priority</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </thead>
+
+    <tbody *ngFor="let task of taskList | filter: 'taskname':taskDTO.taskname 
+    | filter :'parentname':taskDTO.parentname
+    | filter :'priorityFrom':taskDTO.priorityFrom
+    | filter :'priorityTo':taskDTO.priorityTo
+    | filter :'startDate':taskDTO.startDate
+    | filter : 'toDate' : taskDTO.toDate">
+      <tr>
+        <td scope="row">{{task.taskname}}</td>
+        <td>{{task.parentname}}</td>
+        <td>{{task.priority}}</td>
+        <td>{{task.startDate}}</td>
+        <td>{{task.toDate}}</td>
+        <td>
+            <button class="btn btn-primary" (click)="openModalDialog(task)"  [disabled]="task.status !== 'active'">Edit</button>      
+        </td>
+        <td>
+            <button class="btn btn-danger" (click)="deleteTask(task)"  [disabled]="task.status !== 'active'">End Task</button>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="backdrop" [ngStyle]="{'display':display}"></div>
+<div class="modal" role="dialog" tabindex="-1"  [ngStyle]="{'display':display}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Update Task</h1>
+                <button type="button" class="close" aria-label="Close" (click)="closeModalDialog()"><span aria-hidden="true">&times;</span></button>    
+            </div>
+            <div class="modal-body">
+                <form #updateForm="ngForm">
+                    <div class="form-group">
+                      <label>Task Name</label>
+                      <input [ngModel]="updateTaskDTO.taskname"  name="taskname" type="text" class="form-control"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <input [ngModel]="updateTaskDTO.priority" name="priority" type="range" min="0" max="30" class="form-control custom-range"/>
+                    </div>
+                  
+                    <div class="form-group">
+                        <label>Parent Name</label>
+                        <input [ngModel]="updateTaskDTO.parentname" name="parentname" type="text" class="form-control"/>
+                    </div>
+                  
+                      <div class="form-group">
+                          <label>Start Date</label>
+                          <input [ngModel]="updateTaskDTO.startDate" name="startDate" type="date" class="form-control"/>
+                      </div>
+                  
+                      <div class="form-group">
+                          <label>End Date</label>
+                          <input [ngModel]="updateTaskDTO.toDate" name="toDate"  type="date" class="form-control"/>
+                      </div>                  
+                     
+                  </form>
+            </div>    
+            <div class="modal-footer">
+                <button class="btn btn-primary" (click)="updateTask(updateForm.value)"  >Update Task</button>
+               
+                <button class="btn btn-primary" (click)="closeModalDialog()"> Cancel</button>  
+            </div>       
+        </div>
+ 
+    </div>
+  </div>
